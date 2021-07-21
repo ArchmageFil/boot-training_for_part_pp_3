@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment/>
+    <entry key="wrong_email">Неправильный синтаксис электронной почты</entry>
+    <entry key="deleted">Удален</entry>
+    <entry key="duplicate_email">Пользователь с таким почтовым адресом уже есть.</entry>
+    <entry key="no_id_in_db">Пользователя с таким ИД нет в базе данных</entry>
+    <entry key="no_email_in_db"> не зарегистрирован ни на одного пользователя</entry>
+    <entry key="updated">Обновлено</entry>
+    <entry key="user_added">Пользователь %s %s добавлен</entry>
+    <entry key="wrong_age">Возраст должен быть корректным или не быть вообще</entry>
+    <entry key="password_empty">Пароль не может быть пустым</entry>
+    <entry key="wrong_role">Пришло неверное название роли: </entry>
+</properties>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница пользователя</title>
+    <link rel="stylesheet" type="text/css" href="css/newcss.css">
+</head>
+<body>
+<div sec:authorize="isAuthenticated()">
+    <h4><a th:href="@{/logout}" th:text="логаут">выйти из сумрака</a></h4>
+</div>
+
+<h1 th:text="|Профиль пользователя ${user.email}|">Профиль пользователя</h1>
+
+
+<div th:object="${user}">
+    <p>
+        Имя: <span th:text="*{name}">Аноним</span>.
+    </p>
+    <p>
+        Фамилия: <span th:text="*{surname}">Аанонимов</span>.
+    </p>
+    <p>
+        Блокировка: <span th:text="(*{goodAcc} ? 'Действует' : 'Недействителен')">Н/д</span>.
+    </p>
+    <p>
+        Права: <span th:each="role : *{roles}" th:text="' ' + ${role.role}">Н/д</span>
+    </p>
+    <p></p>
+    <p></p>
+</div>
+
+<p>
+    <a href="index.html" th:href="@{/}">Вернуться на главную</a>
+</p>
+
+</body>
+</html>

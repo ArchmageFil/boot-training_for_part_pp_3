@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактор Пользователя</title>
+    <link rel="stylesheet" type="text/css" href="/css/newcss.css">
+</head>
+<body class="body-form">
+<div sec:authorize="isAuthenticated()">
+    <h4><a th:href="@{/logout}" th:text="логаут">выйти из сумрака</a></h4>
+</div>
+<form class="edit-form" action="#" th:method="PATCH" th:action="@{/admin/}" th:object="${user}">
+
+    <fieldset>
+        <legend>Редактирование пользователя</legend>
+        <div class="add-line">
+            <label th:for="id" th:text="'Идентифиикатор: '">Идентификатор: </label>
+            <input type="number" th:field="*{id}" readonly>
+        </div>
+        <div class="add-line">
+            <label th:for="id" th:text="'Имя: '">Имя: </label>
+            <input type="text" th:field="*{name}">
+        </div>
+        <div class="add-line">
+            <label th:for="id" th:text="'Фамилия: '">Фамилия: </label>
+            <input type="text" th:field="*{surname}">
+        </div>
+        <div class="add-line">
+            <label th:for="id" th:text="'Почта: '">Почта: </label>
+            <input type="text" th:field="*{email}">
+        </div>
+        <div class="add-line">
+            <label th:for="goodAcc" th:text="'Активный: '">Действуующий: </label>
+            <input type="checkbox" th:field="*{goodAcc}"/>
+        </div>
+        <div class="button-submit, add-line">
+            <button type="submit" name="patch" th:text="'Изменить'">Изменить</button>
+        </div>
+    </fieldset>
+</form>
+<p>
+    <a href="home.html" th:href="@{/}">На главную</a>
+</p>
+</body>
+</html>

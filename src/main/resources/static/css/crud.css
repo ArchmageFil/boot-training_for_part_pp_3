@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body{
+    background: lightgray;
+}
+
+.element_A {
+    width: 100%;
+    max-height: 100px;
+    background: #EEE;
+}
+
+.element_B {
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: grey;
+}
+
+.element_C {
+    display: grid;
+}
+
+table, th, td {
+    border: 1px solid grey;
+}
+
+td, th {
+    padding: 5px;
+}
+
+.add-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+h3 {
+    text-align: center;
+    color: red;
+}
+
+.add-button {
+    text-decoration: none;
+    color: black;
+    background-color: lightgrey;
+    border: 1px solid black;
+    padding: 20px 10px;
+    text-align: center;
+}
+
+.add-line {
+    text-align: center;
+    background-color: white;
+}
+
+.edit-form {
+position: fixed;
+ top: 50%;
+ left: 50%;
+ margin-top: -100px;
+ margin-left: -70px;
+ border: 2px solid grey;
+}
