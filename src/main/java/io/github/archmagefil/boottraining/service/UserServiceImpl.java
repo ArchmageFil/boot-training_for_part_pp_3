@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         if (dao.findByEmail(tempUser.getEmail()).isPresent()) {
             return util.getWords().getProperty("duplicate_email");
         }
-        // Криптуем пароль нового юзера.
+        // Шифруем пароль нового юзера.
         tempUser.setPassword(bCrypt.encode(tempUser.getPassword()));
         // Назначем роль и добвляем.
         tempUser.getRoles().add(roleService.findByName(tempUser.getRole())
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         if (null == user) {
             return util.getWords().getProperty("no_id_in_db");
         }
-        // Проверяем почту на дублирование, с Optional логика сразу становится "понятной"
+        // Проверяем почту на дублирование, с Optional
         if (dao.findByEmail(tempUser.getEmail())
                 .filter(x -> !(x.getId().equals(user.getId())))
                 .isPresent()) {
@@ -67,7 +67,11 @@ public class UserServiceImpl implements UserService {
         // Обновляем
         user.setName(tempUser.getName().trim());
         user.setSurname(tempUser.getSurname().trim());
+        user.setAge(tempUser.getAge());
         user.setEmail(tempUser.getEmail());
+        if (tempUser.getPassword() != null) {
+            user.setPassword(tempUser.getPassword());
+        }
         user.setGoodAcc(tempUser.getGoodAcc());
         dao.update(user);
         return util.getWords().getProperty("updated");

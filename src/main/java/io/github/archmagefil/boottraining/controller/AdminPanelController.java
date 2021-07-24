@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/")
-public class CrudController {
+@RequestMapping("/")
+public class AdminPanelController {
     private final UserService userService;
     private final RoleService roleService;
     private VisitorMessages messages;
 
     @Autowired
-    public CrudController(UserService userService, RoleService roleService) {
+    public AdminPanelController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -32,7 +32,7 @@ public class CrudController {
     }
 
     /**
-     * Основной список пользователей с формой нового пользоваателя
+     * Основной список пользователей с формой нового пользователя
      */
     @GetMapping("/")
     public String listUsers(@RequestParam(value = "r", defaultValue = "false")
@@ -43,7 +43,7 @@ public class CrudController {
             model.addAttribute("result", messages.getResult());
         }
         model.addAttribute("userList", userService.getAllUsers());
-        return "/admin/index.html";
+        return "/index.html";
     }
 
     /**
@@ -55,26 +55,7 @@ public class CrudController {
     @PostMapping("/")
     public String addUser(@ModelAttribute UserDto tempUser) {
         messages.setResult(userService.addUser(tempUser));
-        return "redirect:/admin/?r=true";
-    }
-
-    /**
-     * Запрос странички с редактированием пользователя
-     */
-    @GetMapping("/edit/{id}")
-    public String editUser(@PathVariable long id, Model model) {
-        User user = userService.find(id);
-
-        // Такого не должно быть, т.к. вызов по кнопке, но если сервис
-        // не нашел пользователя то возвращаемся на общую страничку
-        if (user == null) {
-            messages.setResult("Пользователь не найден в БД");
-            return "redirect:admin/?r=true";
-        }
-        // Кидаем в сообщения результат операции ии возвращаемся на основную страницу
-        messages.setId(id);
-        model.addAttribute("user", user);
-        return "/admin/edit.html";
+        return "redirect:/?r=true";
     }
 
     /**
@@ -90,7 +71,7 @@ public class CrudController {
         }
         // Кидаем в сообщения результат операции и возвращаемся на основную страницу
         messages.setResult(userService.updateUser(tempUser));
-        return "redirect:/admin/?r=true";
+        return "redirect:/?r=true";
     }
 
     /**
@@ -99,7 +80,7 @@ public class CrudController {
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable long id) {
         messages.setResult(userService.deleteUser(id));
-        return "redirect:/admin/?r=true";
+        return "redirect:/?r=true";
     }
 
     /**
@@ -108,12 +89,26 @@ public class CrudController {
     @DeleteMapping("/db_gen/")
     public String clear(UserService service) {
         messages.setResult(service.clearDB());
-        return "redirect:/admin/?r=true";
+        return "redirect:/?r=true";
+    }
+
+    /**
+     * @return Страница с формой авторизациии.
+     */
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login.html";
+    }
+
+    @GetMapping(value = "/login", params = "error")
+    public String loginErrorPage(Model model) {
+        model.addAttribute("bad_credentials", "true");
+        return "login.html";
     }
 
     @Autowired
     public void setMessages(VisitorMessages messages) {
         this.messages = messages;
     }
-
 }

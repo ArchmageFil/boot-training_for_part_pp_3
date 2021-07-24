@@ -11,8 +11,9 @@ import java.util.List;
 @Component
 @NoArgsConstructor
 public class UserDto {
-    private String name = null;
-    private String surname = null;
+    private String name;
+    private String surname;
+    private Integer age;
     private String email;
     private String password;
     private Boolean goodAcc = true;
@@ -20,6 +21,6 @@ public class UserDto {
     private List<Role> roles = new ArrayList<>();
 
     public User createUser() {
-        return new User(name, surname, email, password, goodAcc, roles);
+        return new User(name, surname, age, email, password, goodAcc, roles);
     }
 }

@@ -20,29 +20,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/resources").permitAll()
-                .antMatchers("/user").hasAnyRole("user", "admin")
-                .antMatchers("/admin/**").hasRole("admin")
-                .antMatchers("/admin").hasRole("admin")
-                .antMatchers("/logout").authenticated()
-                .and().csrf().disable()
-
-                .formLogin().loginPage("/login")
-                .successHandler(new LoginSuccessHandler())
-                .loginProcessingUrl("/login")
-                .usernameParameter("j_username")
-                .passwordParameter("j_password")
-                .permitAll().and()
-
-                .logout().permitAll()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/");
+//                .antMatchers("/login").permitAll()
+//                .antMatchers("/resources").permitAll()
+//                .antMatchers("/user").hasAnyRole("user", "admin")
+//                .antMatchers("/admin/**").hasRole("admin")
+//                .antMatchers("/admin").hasRole("admin")
+//                .antMatchers("/logout").authenticated()
+//                .and().csrf().disable()
+//
+//                .formLogin().loginPage("/login")
+//                .successHandler(loginHandler())
+//                .loginProcessingUrl("/login")
+//                .usernameParameter("j_username")
+//                .passwordParameter("j_password")
+//                .permitAll().and()
+//
+//                .logout().permitAll()
+//                .logoutRequestMatcher(logoutMatcher())
+//                .logoutSuccessUrl("/");
+        .antMatchers("/**").permitAll();
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
+    }
+    @Bean
+    public AntPathRequestMatcher logoutMatcher(){
+        return new AntPathRequestMatcher("/logout");
+    }
+
+    @Bean
+    public LoginSuccessHandler loginHandler(){
+        return new LoginSuccessHandler();
     }
 
     @Bean
