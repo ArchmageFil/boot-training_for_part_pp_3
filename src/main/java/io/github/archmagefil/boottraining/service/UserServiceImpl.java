@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         }
         // Шифруем пароль нового юзера.
         tempUser.setPassword(bCrypt.encode(tempUser.getPassword()));
-        // Назначем роль и добвляем.
+        // Назначем роль и добавляем.
         tempUser.getRoles().add(roleService.findByName(tempUser.getRole())
                 .orElseThrow(() -> new IllegalArgumentException(
                         util.getWords().getProperty("wrong_role") + tempUser.getRole())));

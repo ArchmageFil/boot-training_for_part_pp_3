@@ -7,14 +7,15 @@ import io.github.archmagefil.boottraining.model.VisitorMessages;
 import io.github.archmagefil.boottraining.service.RoleService;
 import io.github.archmagefil.boottraining.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
 public class AdminPanelController {
     private final UserService userService;
     private final RoleService roleService;
@@ -26,15 +27,16 @@ public class AdminPanelController {
         this.roleService = roleService;
     }
 
-    @ModelAttribute("roles")
-    public List<Role> roleList() {
-        return roleService.getAllRoles();
-    }
+//    @ModelAttribute("allRoles")
+//    public List<Role> roleList() {
+//        return roleService.getAllRoles();
+//    }
 
     /**
      * Основной список пользователей с формой нового пользователя
      */
     @GetMapping("/")
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public String listUsers(@RequestParam(value = "r", defaultValue = "false")
                                     Boolean isRedirect, Model model) {
         model.addAttribute("userDto", new UserDto());
@@ -42,6 +44,7 @@ public class AdminPanelController {
         if (isRedirect) {
             model.addAttribute("result", messages.getResult());
         }
+        model.addAttribute("allRoles", roleService.getAllRoles());
         model.addAttribute("userList", userService.getAllUsers());
         return "/index.html";
     }
@@ -53,8 +56,10 @@ public class AdminPanelController {
      * @return возвращает на основную админку.
      */
     @PostMapping("/")
-    public String addUser(@ModelAttribute UserDto tempUser) {
-        messages.setResult(userService.addUser(tempUser));
+    @Secured({"ROLE_ADMIN"})
+    public String addUser(HttpServletRequest request) {
+        request.getCookies();
+        //messages.setResult(userService.addUser(tempUser));
         return "redirect:/?r=true";
     }
 
@@ -98,12 +103,6 @@ public class AdminPanelController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login.html";
-    }
-
-    @GetMapping(value = "/login", params = "error")
-    public String loginErrorPage(Model model) {
-        model.addAttribute("bad_credentials", "true");
         return "login.html";
     }
 
