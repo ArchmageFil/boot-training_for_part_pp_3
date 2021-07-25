@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -38,7 +39,8 @@ public class AdminPanelController {
     @GetMapping("/")
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public String listUsers(@RequestParam(value = "r", defaultValue = "false")
-                                    Boolean isRedirect, Model model) {
+                                    Boolean isRedirect, Model model, Principal principal) {
+        model.addAttribute("authenticatedUser", userService.findByUsername(principal.getName()));
         model.addAttribute("userDto", new UserDto());
         // Если в запросе пришла инфа о наличии доп. сообщениий - добавить в модель
         if (isRedirect) {

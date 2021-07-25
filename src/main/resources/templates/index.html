@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -11,11 +12,15 @@
 </head>
 <body>
 <div class="p-3 bg-dark bg-gradient text-white row justify-content-between"> <!-- Верхняя серая строчка -->
-    <div class="col-md-7"><h5>тут должно быть мыло и роли</h5></div>
-    <!--TODO Тут сделать данные зарегистрированного ппользователя -->
+    <div class="col-md-7"><h5><span sec:authentication="name">тут должно быть мыло и роли</span>
+        , имеет роли:
+        <span th:each="roleInList, iterStat : ${authenticatedUser.roles}"
+              th:text="!${iterStat.last} ? ${#strings.substring(roleInList.roleTitle,5)} + ' '
+                                                  : ${#strings.substring(roleInList.roleTitle,5)}">
+                                            </span></h5>
+    </div>
     <div class="col-md-1"><h5><a class="text-secondary" href="/logout">logout</a></h5></div>
 </div> <!-- /Верхняя серая строчка -->
-
 
 <div class="row"> <!-- Тело страницы после заголовка -->
 
@@ -23,11 +28,12 @@
     <div class="col-md-2 ">  <!-- Левое меню Админ - пользователь -->
         <!-- TODO сделать чтобы аминка пряталаась от USER -->
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <button class="nav-link active" id="v-pills-admin-tab" data-bs-toggle="pill" data-bs-target="#v-pills-admin"
+            <button sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link active" id="v-pills-admin-tab"
+                    data-bs-toggle="pill" data-bs-target="#v-pills-admin"
                     type="button" role="tab" aria-controls="v-pills-admin" aria-selected="true">Админ
             </button>
             <button class="nav-link" id="v-pills-user-tab" data-bs-toggle="pill" data-bs-target="#v-pills-user"
-                    type="button" role="tab" aria-controls="v-pills-user" aria-selected="false">Пользователь
+                    type="button" role="tab" aria-controls="v-pills-user">Пользователь
             </button>
         </div>
     </div> <!-- /Левое меню Админ - пользователь -->
@@ -35,7 +41,8 @@
 
     <div class="tab-content col-md-10"> <!-- Контейнер вкладок центральной области-->
         <!-- Панель администратора-->
-        <div class="tab-pane fade show active bg-light" id="v-pills-admin" role="tabpanel"
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="tab-pane fade show active bg-light" id="v-pills-admin"
+             role="tabpanel"
              aria-labelledby="v-pills-admin-tab">
             <h1><b>Панель администратора</b></h1>
             <div class="container-fluid">
@@ -78,7 +85,7 @@
                                     </thead>
                                     <tbody th:each="cur_user : ${AllUsersList}">
                                     <tr>
-                                        <!--/*@thymesVar id="cur_user" type="io.github.archmagefil.boottraining.model.User"*/-->
+
                                         <td th:text="${cur_user.id}" th:id="'allListId_' + ${cur_user.id}">10500</td>
                                         <td th:text="${cur_user.name}">Имя</td>
                                         <td th:text="${cur_user.surname}">Фамилия</td>
@@ -190,12 +197,17 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td>1</td>
-                                <td>Name</td>
-                                <td>Surname</td>
-                                <td>11</td>
-                                <td>ee@Email</td>
-                                <td>User</td>
+                                <td th:text="${authenticatedUser.id}" th:id="'CurrentUserListId_' + ${authenticatedUser.id}">10500</td>
+                                <td th:text="${authenticatedUser.name}">Имя</td>
+                                <td th:text="${authenticatedUser.surname}">Фамилия</td>
+                                <td th:text="${authenticatedUser.age}">13</td>
+                                <td th:text="${authenticatedUser.email}">ee@Email</td>
+                                <td>
+                                    <span th:each="roleInList, iterStat : ${authenticatedUser.roles}"
+                                          th:text="!${iterStat.last} ? ${#strings.substring(roleInList.roleTitle,5)} + ' '
+                                          : ${#strings.substring(roleInList.roleTitle,5)}">
+                                    </span>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -362,6 +374,7 @@
         }
     }
 
+    document.querySelector('#v-pills-tab').firstElementChild.click()
 
 </script>
 </body>
