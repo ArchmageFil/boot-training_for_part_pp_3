@@ -26,7 +26,6 @@
 
 
     <div class="col-md-2 ">  <!-- Левое меню Админ - пользователь -->
-        <!-- TODO сделать чтобы аминка пряталаась от USER -->
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <button sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link active" id="v-pills-admin-tab"
                     data-bs-toggle="pill" data-bs-target="#v-pills-admin"
@@ -261,7 +260,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="InputPasswordModalEditor" class="form-label fw-bold">Пароль</label>
-                        <input type="password" class="form-control" id="InputPasswordModalEditor" th:field="*{password}" required>
+                        <input type="password" class="form-control" id="InputPasswordModalEditor" th:field="*{password}">
                     </div>
                     <div class="mb-4">
                         <label for="RolesModalEditor" class="form-label fw-bold">Роль</label>

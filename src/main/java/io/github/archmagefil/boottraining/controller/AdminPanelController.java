@@ -65,16 +65,15 @@ public class AdminPanelController {
     /**
      * Обработка формы на редактирование пользователя.
      */
-    @PatchMapping("/") //TODO Прилетает с иД = нуль и в сервисы должен идти UserDTO
+    @PatchMapping("/")
+    @Secured({"ROLE_ADMIN"})
     public String updateUser(@ModelAttribute UserDto tempUser) {
-        // Ставим ранее сохраненный ИД
-//        tempUser.setId(messages.getId());
         if (tempUser.getId() == null) {
             messages.setResult("Ошибка запроса, попробуй еще раз.");
             return "redirect:/admin/?r=true";
         }
         // Кидаем в сообщения результат операции и возвращаемся на основную страницу
-        messages.setResult(userService.updateUser(tempUser.createUser()));
+        messages.setResult(userService.updateUser(tempUser));
         return "redirect:/?r=true";
     }
 
@@ -82,6 +81,7 @@ public class AdminPanelController {
      * Обработка запроса на удаление из БД пользователя по ИД
      */
     @DeleteMapping("/{id}")
+    @Secured({"ROLE_ADMIN"})
     public String deleteUser(@PathVariable long id) {
         messages.setResult(userService.deleteUser(id));
         return "redirect:/?r=true";
@@ -91,6 +91,7 @@ public class AdminPanelController {
      * Очистка БД
      */
     @DeleteMapping("/db_gen/")
+    @Secured({"ROLE_ADMIN"})
     public String clear(UserService service) {
         messages.setResult(service.clearDB());
         return "redirect:/?r=true";
@@ -105,6 +106,9 @@ public class AdminPanelController {
         return "login.html";
     }
 
+    /**
+     * Вместо обработчика
+     */
     @RequestMapping("/login/good")
     public String goodLogin() {
         return "redirect:/";

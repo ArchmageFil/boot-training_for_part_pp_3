@@ -10,7 +10,7 @@ public interface UserService {
 
     String addUser(UserDto tempUser);
 
-    String updateUser(User user);
+    String updateUser(UserDto tempUser);
 
     String deleteUser(long id);
 

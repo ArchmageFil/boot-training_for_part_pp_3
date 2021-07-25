@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String updateUser(User tempUser) {
+    public String updateUser(UserDto tempUser) {
         // Проверяем синтаксис мыла
         tempUser.setEmail(tempUser.getEmail().trim());
         if (util.isInvalidEmail(tempUser.getEmail())) {
@@ -73,8 +73,9 @@ public class UserServiceImpl implements UserService {
         user.setSurname(tempUser.getSurname().trim());
         user.setAge(tempUser.getAge());
         user.setEmail(tempUser.getEmail());
+        // Смена пароля в форме редактирования не обязательна.
         if (tempUser.getPassword() != null) {
-            user.setPassword(tempUser.getPassword());
+            user.setPassword(bCrypt.encode(tempUser.getPassword()));
         }
         user.setGoodAcc(tempUser.getGoodAcc());
         dao.update(user);
