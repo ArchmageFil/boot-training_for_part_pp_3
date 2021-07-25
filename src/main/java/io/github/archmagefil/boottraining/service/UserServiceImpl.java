@@ -68,6 +68,12 @@ public class UserServiceImpl implements UserService {
                 .isPresent()) {
             return util.getWords().getProperty("duplicate_email");
         }
+        // Находим соответствие ролей в БД и добавляем.
+        user.setRoles(tempUser.getRoles().stream()
+                .map(r -> roleService.findById(r.getId()))
+                .map(r -> r.orElseThrow(() -> new IllegalArgumentException(
+                        util.getWords().getProperty("wrong_role" + r))))
+                .collect(Collectors.toList()));
         // Обновляем
         user.setName(tempUser.getName().trim());
         user.setSurname(tempUser.getSurname().trim());

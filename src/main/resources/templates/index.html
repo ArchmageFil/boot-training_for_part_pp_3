@@ -264,11 +264,9 @@
                     </div>
                     <div class="mb-4">
                         <label for="RolesModalEditor" class="form-label fw-bold">Роль</label>
-                        <select class="form-select" th:field="*{roles}" multiple id="RolesModalEditor"
-                                aria-label="select-roles" required>
+                        <select class="form-select" th:field="*{roles}" multiple id="RolesModalEditor" aria-label="select-roles" required>
                             <option th:each="roleType, iterStat : ${allRolesList}" th:value="${{roleType}}"
-                                    th:text="!${iterStat.last} ? ${#strings.substring(roleType.roleTitle,5)} + ' '
-                                                  : ${#strings.substring(roleType.roleTitle,5)}">Роль
+                                    th:text="${#strings.substring(roleType.roleTitle,5)}">Роль
                             </option>
                         </select>
                     </div>
@@ -320,8 +318,8 @@
                         <label for="RolesModalDelete" class="form-label fw-bold">Роль</label>
                         <select class="form-select" multiple id="RolesModalDelete" aria-label="select-roles" disabled>
                             <option th:each="roleType, iterStat : ${allRolesList}" th:value="${{roleType}}"
-                                    th:text="!${iterStat.last} ? ${#strings.substring(roleType.roleTitle,5)} + ' '
-                                                  : ${#strings.substring(roleType.roleTitle,5)}">Роль
+                                    th:text="${#strings.substring(roleType.roleTitle,5)}">Роль
+                            </option>
                         </select>
                     </div>
                 </form> <!-- /Форма удаления пользователя -->
