@@ -68,7 +68,7 @@ public class AdminPanelController {
     @PatchMapping("/") //TODO Прилетает с иД = нуль и в сервисы должен идти UserDTO
     public String updateUser(@ModelAttribute UserDto tempUser) {
         // Ставим ранее сохраненный ИД
-        tempUser.setId(messages.getId());
+//        tempUser.setId(messages.getId());
         if (tempUser.getId() == null) {
             messages.setResult("Ошибка запроса, попробуй еще раз.");
             return "redirect:/admin/?r=true";

@@ -239,8 +239,10 @@
                       th:method="PATCH" th:action="@{/}" th:object="${userDto}">
                     <div class="mb-3">
                         <label for="IdModalEditor" class="form-label fw-bold ">Идентификатор</label>
-                        <input type="text" class="form-control" id="IdModalEditor" th:field="*{id}" disabled required>
+                        <input type="text" class="form-control" id="IdModalEditor" disabled>
+                        <input type="hidden" id="RealIdModalEditor" name="id" th:field="*{id}" value=""/>
                     </div>
+
                     <div class="mb-3">
                         <label for="InputNameModalEditor" class="form-label fw-bold ">Имя</label>
                         <input type="text" class="form-control" id="InputNameModalEditor" th:field="*{name}" required>
@@ -345,7 +347,8 @@
 <script>
     function editButton(fieldId) {
         fieldId = document.querySelector('#' + fieldId)
-        document.querySelector('#IdModalEditor').value = fieldId.firstChild.textContent // id
+        document.querySelector('#IdModalEditor').value = fieldId.firstChild.textContent // видимый Ид
+        document.querySelector('#RealIdModalEditor').value = fieldId.firstChild.textContent // отправляемый Ид
         fieldId = fieldId.nextElementSibling
         document.querySelector('#InputNameModalEditor').value = fieldId.firstChild.textContent // name
         fieldId = fieldId.nextElementSibling
