@@ -1,11 +1,16 @@
 package io.github.archmagefil.boottraining;
 
+import io.github.archmagefil.boottraining.util.RoleFormatter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class BootTrainingApplication {
 
+    @SuppressWarnings("SpellCheckingInspection")
     public static void main(String[] args) {
         SpringApplication.run(BootTrainingApplication.class, args);
         String url = "http://127.0.0.1:8080";
@@ -29,6 +34,13 @@ public class BootTrainingApplication {
             }
         } catch (Exception e) {
             // игнорируем все ошибки
+        }
+    }
+    @Configuration
+    public static class MyClass implements WebMvcConfigurer {
+        @Override
+        public void addFormatters(FormatterRegistry registry) {
+            registry.addFormatter(new RoleFormatter());
         }
     }
 }

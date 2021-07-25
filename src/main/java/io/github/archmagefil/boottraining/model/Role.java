@@ -14,10 +14,10 @@ public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String role;
+    private String roleTitle;
 
     @Override
     public String getAuthority() {
-        return role;
+        return roleTitle;
     }
 }

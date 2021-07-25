@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -27,13 +26,14 @@ public class AdminPanelController {
         this.roleService = roleService;
     }
 
-//    @ModelAttribute("allRoles")
-//    public List<Role> roleList() {
-//        return roleService.getAllRoles();
-//    }
+    @ModelAttribute("allRolesList")
+    public List<Role> allRolesList() {
+        return roleService.getAllRoles();
+    }
 
     /**
-     * Основной список пользователей с формой нового пользователя
+     * @return Основную страницу админки
+     * @param isRedirect если перенаправление с ответом, опционально
      */
     @GetMapping("/")
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
@@ -44,22 +44,20 @@ public class AdminPanelController {
         if (isRedirect) {
             model.addAttribute("result", messages.getResult());
         }
-        model.addAttribute("allRoles", roleService.getAllRoles());
-        model.addAttribute("userList", userService.getAllUsers());
+        model.addAttribute("AllUsersList", userService.getAllUsers());
         return "/index.html";
     }
 
     /**
-     * Создаание нового пользователя
+     * Создание нового пользователя
      *
      * @param tempUser ДТОшка для подготовки к созданию сущности
      * @return возвращает на основную админку.
      */
     @PostMapping("/")
     @Secured({"ROLE_ADMIN"})
-    public String addUser(HttpServletRequest request) {
-        request.getCookies();
-        //messages.setResult(userService.addUser(tempUser));
+    public String addUser(@ModelAttribute("UserDto") UserDto tempUser) {
+        messages.setResult(userService.addUser(tempUser));
         return "redirect:/?r=true";
     }
 
@@ -104,6 +102,10 @@ public class AdminPanelController {
     @GetMapping("/login")
     public String loginPage() {
         return "login.html";
+    }
+    @RequestMapping("/login/good")
+    public String goodLogin(){
+        return "redirect:/";
     }
 
     @Autowired

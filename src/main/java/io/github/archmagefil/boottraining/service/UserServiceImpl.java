@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,12 +34,15 @@ public class UserServiceImpl implements UserService {
         if (dao.findByEmail(tempUser.getEmail()).isPresent()) {
             return util.getWords().getProperty("duplicate_email");
         }
+        // Находим соответствие ролей в БД и добавляем.
+        tempUser.setRoles(tempUser.getRoles().stream()
+                .map(r -> roleService.findById(r.getId()))
+                .map(r -> r.orElseThrow(() -> new IllegalArgumentException(
+                        util.getWords().getProperty("wrong_role" + r))))
+                .collect(Collectors.toList()));
         // Шифруем пароль нового юзера.
         tempUser.setPassword(bCrypt.encode(tempUser.getPassword()));
-        // Назначем роль и добавляем.
-        tempUser.getRoles().add(roleService.findByName(tempUser.getRole())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        util.getWords().getProperty("wrong_role") + tempUser.getRole())));
+        // Проверки закончены, можно сохранять.
         User user = tempUser.createUser();
         dao.add(user);
         return String.format(util.getWords().getProperty("user_added"),

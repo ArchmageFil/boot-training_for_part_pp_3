@@ -76,7 +76,7 @@
                                         <td>Удалить</td>
                                     </tr>
                                     </thead>
-                                    <tbody th:each="cur_user : ${userList}">
+                                    <tbody th:each="cur_user : ${AllUsersList}">
                                     <tr>
                                         <!--/*@thymesVar id="cur_user" type="io.github.archmagefil.boottraining.model.User"*/-->
                                         <td th:text="${cur_user.id}" th:id="'allListId_' + ${cur_user.id}">10500</td>
@@ -86,8 +86,8 @@
                                         <td th:text="${cur_user.email}">ee@Email</td>
                                         <td>
                                             <span th:each="roleInList, iterStat : ${cur_user.roles}"
-                                                  th:text="!${iterStat.last} ? ${#strings.substring(roleInList.role,5)} + ' '
-                                                  : ${#strings.substring(roleInList.role,5)}">
+                                                  th:text="!${iterStat.last} ? ${#strings.substring(roleInList.roleTitle,5)} + ' '
+                                                  : ${#strings.substring(roleInList.roleTitle,5)}">
                                             </span>
                                         </td>
                                         <td>
@@ -118,8 +118,8 @@
                         </div>
                         <div class="container bg-white">
                             <!-- Форма нового пользователя-->
-                            <form class="bg-white col-md-4 offset-md-4 text-md-center" th:action="@{/}" th:method="POST"
-                                  th:object="${userDto}">
+                            <form class="bg-white col-md-4 offset-md-4 text-md-center"
+                                  th:action="@{/}" th:method="POST" th:object="${userDto}">
                                 <div class="mb-3">
                                     <label for="InputName" class="form-label fw-bold ">Имя</label>
                                     <input th:field="*{name}" type="text" class="form-control" id="InputName" required>
@@ -147,9 +147,9 @@
                                     <label for="Roles" class="form-label fw-bold">Роль</label>
                                     <select class="form-select" th:field="*{roles}" multiple id="Roles"
                                             aria-label="select-roles" required>
-                                        <option th:each="roleType, roleTypeStats : ${allRoles}"
-                                                th:text="${roleType.role}"
-                                                th:value="${roleType.role}">Роль
+                                        <option th:each="roleType : ${allRolesList}"
+                                                th:value="${{roleType}}"
+                                                th:text="${roleType.roleTitle}">Роль
                                         </option>
                                     </select>
                                 </div>

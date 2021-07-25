@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login/check")
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")
-                .successForwardUrl("/")
+                .successForwardUrl("/login/good")
                 .permitAll().and()
 
                 .logout().permitAll()

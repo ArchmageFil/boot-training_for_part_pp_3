@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +17,23 @@ public class DaoRoleJpa implements DaoRole {
 
     @Override
     public Optional<Role> findByName(String role) {
-        Query query = em.createQuery("SELECT r from Role r " +
-                "WHERE r.role = :role", Role.class);
+        TypedQuery<Role> query = em.createQuery("SELECT r from Role r " +
+                "WHERE r.roleTitle = :role", Role.class);
         query.setParameter("role", role);
         try {
-            return Optional.of((Role) query.getSingleResult());
+            return Optional.of(query.getSingleResult());
+        } catch (javax.persistence.NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Role> findById(Long id) {
+        TypedQuery<Role> query = em.createQuery("SELECT r FROM Role r " +
+                "WHERE r.id = :id", Role.class);
+        query.setParameter("id", id);
+        try {
+            return Optional.of(query.getSingleResult());
         } catch (javax.persistence.NoResultException e) {
             return Optional.empty();
         }

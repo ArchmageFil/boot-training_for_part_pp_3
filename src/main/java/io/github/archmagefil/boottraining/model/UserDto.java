@@ -17,10 +17,10 @@ public class UserDto {
     private String email;
     private String password;
     private Boolean goodAcc = true;
-    private String role;
     private List<Role> roles = new ArrayList<>();
 
     public User createUser() {
-        return new User(name, surname, age, email, password, goodAcc, roles);
+        return new User(name.trim(), surname.trim(),
+                age, email, password, goodAcc, roles);
     }
 }
