@@ -7,7 +7,6 @@ import org.springframework.web.context.annotation.SessionScope;
 @SessionScope
 public class VisitorMessages {
     private String result;
-    private Long id;
 
     public String getResult() {
         String r = result;
@@ -17,15 +16,5 @@ public class VisitorMessages {
 
     public void setResult(String result) {
         this.result = result;
-    }
-
-    public Long getId() {
-        long i = id;
-        id = null;
-        return i;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }
