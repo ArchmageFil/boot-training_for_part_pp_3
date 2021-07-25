@@ -86,6 +86,9 @@
                                     <tbody th:each="cur_user : ${AllUsersList}">
                                     <tr>
 
+
+
+
                                         <td th:text="${cur_user.id}" th:id="'allListId_' + ${cur_user.id}">10500</td>
                                         <td th:text="${cur_user.name}">Имя</td>
                                         <td th:text="${cur_user.surname}">Фамилия</td>
@@ -232,36 +235,40 @@
             <div class="modal-body">
 
                 <!-- Форма редактора пользователя-->
-                <form class="bg-white col-md-6 offset-md-3 text-md-center">
+                <form class="bg-white col-md-6 offset-md-3 text-md-center" id="EditorModalForm"
+                      th:method="PATCH" th:action="@{/}" th:object="${userDto}">
                     <div class="mb-3">
                         <label for="IdModalEditor" class="form-label fw-bold ">Идентификатор</label>
-                        <input type="text" class="form-control" id="IdModalEditor" disabled required>
+                        <input type="text" class="form-control" id="IdModalEditor" th:field="*{id}" disabled required>
                     </div>
                     <div class="mb-3">
                         <label for="InputNameModalEditor" class="form-label fw-bold ">Имя</label>
-                        <input type="text" class="form-control" id="InputNameModalEditor" required>
+                        <input type="text" class="form-control" id="InputNameModalEditor" th:field="*{name}" required>
                     </div>
                     <div class="mb-3">
                         <label for="InputSurnameModalEditor" class="form-label fw-bold">Фамилия</label>
-                        <input type="text" class="form-control" id="InputSurnameModalEditor" required>
+                        <input type="text" class="form-control" id="InputSurnameModalEditor" th:field="*{surname}" required>
                     </div>
                     <div class="mb-3">
                         <label for="InputAgeModalEditor" class="form-label fw-bold">Возраст</label>
-                        <input type="number" class="form-control" id="InputAgeModalEditor">
+                        <input type="number" class="form-control" id="InputAgeModalEditor" th:field="*{age}">
                     </div>
                     <div class="mb-3">
                         <label for="InputEmailModalEditor" class="form-label fw-bold">Электронная почта</label>
-                        <input type="email" class="form-control" id="InputEmailModalEditor" required>
+                        <input type="email" class="form-control" id="InputEmailModalEditor" th:field="*{email}"required>
                     </div>
                     <div class="mb-3">
                         <label for="InputPasswordModalEditor" class="form-label fw-bold">Пароль</label>
-                        <input type="password" class="form-control" id="InputPasswordModalEditor" required>
+                        <input type="password" class="form-control" id="InputPasswordModalEditor" th:field="*{password}" required>
                     </div>
                     <div class="mb-4">
                         <label for="RolesModalEditor" class="form-label fw-bold">Роль</label>
-                        <select class="form-select" multiple id="RolesModalEditor" aria-label="select-roles" required>
-                            <option value="ROLE_ADMIN">ADMIN</option>
-                            <option selected value="ROLE_USER">USER</option>
+                        <select class="form-select" th:field="*{roles}" multiple id="RolesModalEditor"
+                                aria-label="select-roles" required>
+                            <option th:each="roleType, iterStat : ${allRolesList}" th:value="${{roleType}}"
+                                    th:text="!${iterStat.last} ? ${#strings.substring(roleType.roleTitle,5)} + ' '
+                                                  : ${#strings.substring(roleType.roleTitle,5)}">Роль
+                            </option>
                         </select>
                     </div>
                 </form> <!-- /Форма редактора пользователя-->
@@ -270,7 +277,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary">Сохранить</button>
+                <button type="submit" class="btn btn-primary" form="EditorModalForm">Сохранить</button>
             </div>
         </div>
     </div>
@@ -287,7 +294,7 @@
             <div class="modal-body">
 
                 <!-- Форма удаления пользователя -->
-                <form class="bg-white col-md-6 offset-md-3 text-md-center">
+                <form id="DeleteModalForm" class="bg-white col-md-6 offset-md-3 text-md-center" action="#" th:method="DELETE">
                     <div class="mb-3">
                         <label for="IdModalDelete" class="form-label fw-bold ">Идентификатор</label>
                         <input type="text" class="form-control" id="IdModalDelete" disabled required>
@@ -311,8 +318,9 @@
                     <div class="mb-4">
                         <label for="RolesModalDelete" class="form-label fw-bold">Роль</label>
                         <select class="form-select" multiple id="RolesModalDelete" aria-label="select-roles" disabled>
-                            <option value="ROLE_ADMIN">ADMIN</option>
-                            <option value="ROLE_USER">USER</option>
+                            <option th:each="roleType, iterStat : ${allRolesList}" th:value="${{roleType}}"
+                                    th:text="!${iterStat.last} ? ${#strings.substring(roleType.roleTitle,5)} + ' '
+                                                  : ${#strings.substring(roleType.roleTitle,5)}">Роль
                         </select>
                     </div>
                 </form> <!-- /Форма удаления пользователя -->
@@ -321,7 +329,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-danger">Удалить</button>
+                <button type="submit" class="btn btn-danger" form="DeleteModalForm">Удалить</button>
             </div>
         </div>
     </div>
@@ -353,11 +361,10 @@
             options[i].selected = roles.includes(options[i].textContent);
         }
     }
-
     function deleteButton(fieldId) {
-        console.log(fieldId)
         fieldId = document.querySelector('#' + fieldId)
         document.querySelector('#IdModalDelete').value = fieldId.firstChild.textContent // id
+        document.querySelector('#DeleteModalForm').action = '/' + fieldId.firstChild.textContent
         fieldId = fieldId.nextElementSibling
         document.querySelector('#InputNameModalDelete').value = fieldId.firstChild.textContent // name
         fieldId = fieldId.nextElementSibling

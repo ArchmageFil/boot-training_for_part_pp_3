@@ -1,7 +1,6 @@
 package io.github.archmagefil.boottraining.controller;
 
 import io.github.archmagefil.boottraining.model.Role;
-import io.github.archmagefil.boottraining.model.User;
 import io.github.archmagefil.boottraining.model.UserDto;
 import io.github.archmagefil.boottraining.model.VisitorMessages;
 import io.github.archmagefil.boottraining.service.RoleService;
@@ -33,8 +32,8 @@ public class AdminPanelController {
     }
 
     /**
-     * @return Основную страницу админки
      * @param isRedirect если перенаправление с ответом, опционально
+     * @return Основную страницу админки
      */
     @GetMapping("/")
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
@@ -66,8 +65,8 @@ public class AdminPanelController {
     /**
      * Обработка формы на редактирование пользователя.
      */
-    @PatchMapping("/")
-    public String updateUser(@ModelAttribute User tempUser) {
+    @PatchMapping("/") //TODO Прилетает с иД = нуль и в сервисы должен идти UserDTO
+    public String updateUser(@ModelAttribute UserDto tempUser) {
         // Ставим ранее сохраненный ИД
         tempUser.setId(messages.getId());
         if (tempUser.getId() == null) {
@@ -75,7 +74,7 @@ public class AdminPanelController {
             return "redirect:/admin/?r=true";
         }
         // Кидаем в сообщения результат операции и возвращаемся на основную страницу
-        messages.setResult(userService.updateUser(tempUser));
+        messages.setResult(userService.updateUser(tempUser.createUser()));
         return "redirect:/?r=true";
     }
 
@@ -105,8 +104,9 @@ public class AdminPanelController {
     public String loginPage() {
         return "login.html";
     }
+
     @RequestMapping("/login/good")
-    public String goodLogin(){
+    public String goodLogin() {
         return "redirect:/";
     }
 
