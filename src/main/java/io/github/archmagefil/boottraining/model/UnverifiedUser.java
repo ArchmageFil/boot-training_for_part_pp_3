@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Component
 @NoArgsConstructor
-public class UserDto {
+public class UnverifiedUser {
     private Long id;
     private String name;
     private String surname;

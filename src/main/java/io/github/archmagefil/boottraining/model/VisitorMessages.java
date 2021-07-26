@@ -1,10 +1,11 @@
 package io.github.archmagefil.boottraining.model;
 
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 @Component
-@SessionScope
+@SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class VisitorMessages {
     private String result;
 

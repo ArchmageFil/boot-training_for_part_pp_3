@@ -17,6 +17,8 @@ public interface DaoUser {
 
     Optional<User> findByEmail(String email);
 
+    boolean isEmailExist(String email);
+
     User findById(long id);
 
     String clearDB();
