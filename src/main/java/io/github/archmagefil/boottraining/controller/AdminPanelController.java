@@ -52,54 +52,6 @@ public class AdminPanelController {
     }
 
     /**
-     * Создание нового пользователя
-     *
-     * @param tempUser ДТОшка для подготовки к созданию сущности
-     * @return возвращает на основную админку.
-     */
-    @PostMapping("/")
-    @Secured({"ROLE_ADMIN"})
-    public String addUser(@ModelAttribute("UserDto") UserDto tempUser) {
-        messages.setResult(userService.addUser(tempUser));
-        return "redirect:/?r=true";
-    }
-
-    /**
-     * Обработка формы на редактирование пользователя.
-     */
-    @PatchMapping("/")
-    @Secured({"ROLE_ADMIN"})
-    public String updateUser(@ModelAttribute UserDto tempUser) {
-        if (tempUser.getId() == null) {
-            messages.setResult("Ошибка запроса, попробуй еще раз.");
-            return "redirect:/admin/?r=true";
-        }
-        // Кидаем в сообщения результат операции и возвращаемся на основную страницу
-        messages.setResult(userService.updateUser(tempUser));
-        return "redirect:/?r=true";
-    }
-
-    /**
-     * Обработка запроса на удаление из БД пользователя по ИД
-     */
-    @DeleteMapping("/{id}")
-    @Secured({"ROLE_ADMIN"})
-    public String deleteUser(@PathVariable long id) {
-        messages.setResult(userService.deleteUser(id));
-        return "redirect:/?r=true";
-    }
-
-    /**
-     * Очистка БД
-     */
-    @DeleteMapping("/db_gen/")
-    @Secured({"ROLE_ADMIN"})
-    public String clear(UserService service) {
-        messages.setResult(service.clearDB());
-        return "redirect:/?r=true";
-    }
-
-    /**
      * @return Страница с формой авторизациии.
      */
 

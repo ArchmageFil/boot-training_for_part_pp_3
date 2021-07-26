@@ -8,13 +8,13 @@ import java.util.List;
 public interface UserService {
     List<User> getAllUsers();
 
-    String addUser(UserDto tempUser);
+    User addUser(UserDto tempUser) throws IllegalArgumentException;
 
     String updateUser(UserDto tempUser);
 
     String deleteUser(long id);
 
-    User find(long id);
+    User findById(long id);
 
     User findByUsername(String email);
 

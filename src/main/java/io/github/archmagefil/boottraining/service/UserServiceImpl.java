@@ -27,12 +27,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String addUser(UserDto tempUser) {
+    public User addUser(UserDto tempUser) throws IllegalArgumentException{
         if (util.isInvalidUser(tempUser)) {
-            return util.getMessage();
+            throw new IllegalArgumentException(util.getMessage());
         }
         if (dao.findByEmail(tempUser.getEmail()).isPresent()) {
-            return util.getWords().getProperty("duplicate_email");
+            throw new IllegalArgumentException(
+                    util.getWords().getProperty("duplicate_email"));
         }
         // Находим соответствие ролей в БД и добавляем.
         tempUser.setRoles(tempUser.getRoles().stream()
@@ -45,8 +46,7 @@ public class UserServiceImpl implements UserService {
         // Проверки закончены, можно сохранять.
         User user = tempUser.createUser();
         dao.add(user);
-        return String.format(util.getWords().getProperty("user_added"),
-                user.getName(), user.getSurname());
+        return user;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
             return util.getWords().getProperty("wrong_email");
         }
         //Не успели ли удалить пользователя.
-        User user = find(tempUser.getId());
+        User user = findById(tempUser.getId());
         if (null == user) {
             return util.getWords().getProperty("no_id_in_db");
         }
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String deleteUser(long id) {
-        User user = find(id);
+        User user = findById(id);
         if (user == null) {
             return util.getWords().getProperty("no_id_in_db");
         }
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User find(long id) {
+    public User findById(long id) {
         return dao.findById(id);
     }
 
