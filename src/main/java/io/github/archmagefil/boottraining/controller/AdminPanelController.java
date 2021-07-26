@@ -7,6 +7,7 @@ import io.github.archmagefil.boottraining.service.RoleService;
 import io.github.archmagefil.boottraining.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,8 @@ public class AdminPanelController {
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public String listUsers(@RequestParam(value = "r", defaultValue = "false")
                                     Boolean isRedirect, Model model, Principal principal) {
-        model.addAttribute("authenticatedUser", userService.findByUsername(principal.getName()));
+        model.addAttribute("authenticatedUser", SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal());
         model.addAttribute("userDto", new UserDto());
         // Если в запросе пришла инфа о наличии доп. сообщениий - добавить в модель
         if (isRedirect) {

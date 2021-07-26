@@ -63,9 +63,8 @@ public class UserServiceImpl implements UserService {
             return util.getWords().getProperty("no_id_in_db");
         }
         // Проверяем почту на дублирование, с Optional
-        if (dao.findByEmail(tempUser.getEmail())
-                .filter(x -> !(x.getId().equals(user.getId())))
-                .isPresent()) {
+        if ((!tempUser.getEmail().equals(user.getEmail())
+                && dao.findByEmail(tempUser.getEmail()).isPresent())) {
             return util.getWords().getProperty("duplicate_email");
         }
         // Находим соответствие ролей в БД и добавляем.
