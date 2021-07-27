@@ -28,4 +28,10 @@ public class RoleServiceImpl implements RoleService {
     public Optional<Role> findById(Long id) {
         return daoRole.findById(id);
     }
+
+    @Override
+    public List<Role> findListByIds(List<Role> ids) {
+        ids.forEach(role -> role = findById(role.getId()).orElse(null));
+        return ids;
+    }
 }

@@ -1,8 +1,8 @@
 package io.github.archmagefil.boottraining.service;
 
 import io.github.archmagefil.boottraining.dao.DaoUser;
+import io.github.archmagefil.boottraining.model.UnverifiedUser;
 import io.github.archmagefil.boottraining.model.User;
-import io.github.archmagefil.boottraining.model.UserDto;
 import io.github.archmagefil.boottraining.util.UserTableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,81 +26,63 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User addUser(UserDto tempUser) throws IllegalArgumentException{
-        if (util.isInvalidUser(tempUser)) {
-            throw new IllegalArgumentException(util.getMessage());
+    public void addUser(UnverifiedUser tempUser) {
+        if (isInvalidSyntax(tempUser, true)) {
+            return;
         }
-        if (dao.findByEmail(tempUser.getEmail()).isPresent()) {
-            throw new IllegalArgumentException(
-                    util.getWords().getProperty("duplicate_email"));
+        if (dao.isEmailExist(tempUser.getEmail())) {
+            util.result("duplicate_email");
+            return;
         }
-        // Находим соответствие ролей в БД и добавляем.
-        tempUser.setRoles(tempUser.getRoles().stream()
-                .map(r -> roleService.findById(r.getId()))
-                .map(r -> r.orElseThrow(() -> new IllegalArgumentException(
-                        util.getWords().getProperty("wrong_role" + r))))
-                .collect(Collectors.toList()));
-        // Шифруем пароль нового юзера.
+        tempUser.setRoles(roleService.findListByIds(tempUser.getRoles()));
         tempUser.setPassword(bCrypt.encode(tempUser.getPassword()));
-        // Проверки закончены, можно сохранять.
-        User user = tempUser.createUser();
-        dao.add(user);
-        return user;
+        dao.add(tempUser.createUser());
+        util.result("user_added");
     }
 
     @Override
     @Transactional
-    public String updateUser(UserDto tempUser) {
-        // Проверяем синтаксис мыла
-        tempUser.setEmail(tempUser.getEmail().trim());
-        if (util.isInvalidEmail(tempUser.getEmail())) {
-            return util.getWords().getProperty("wrong_email");
+    public void updateUser(UnverifiedUser tempUser) {
+        User user = find(tempUser.getId());
+        if (user == null) {
+            util.result("no_id_in_db");
+            return;
         }
-        //Не успели ли удалить пользователя.
-        User user = findById(tempUser.getId());
-        if (null == user) {
-            return util.getWords().getProperty("no_id_in_db");
+        if (tempUser.getPassword() != null) {
+            user.setPassword(bCrypt.encode(tempUser.getPassword()));
         }
-        // Проверяем почту на дублирование, с Optional
-        if (dao.findByEmail(tempUser.getEmail())
-                .filter(x -> !(x.getId().equals(user.getId())))
-                .isPresent()) {
-            return util.getWords().getProperty("duplicate_email");
+        if (isInvalidSyntax(tempUser, false)) {
+            return;
         }
-        // Находим соответствие ролей в БД и добавляем.
-        user.setRoles(tempUser.getRoles().stream()
-                .map(r -> roleService.findById(r.getId()))
-                .map(r -> r.orElseThrow(() -> new IllegalArgumentException(
-                        util.getWords().getProperty("wrong_role" + r))))
-                .collect(Collectors.toList()));
-        // Обновляем
+        if ((!tempUser.getEmail().equals(user.getEmail())
+                && dao.isEmailExist(tempUser.getEmail()))) {
+            util.result("duplicate_email");
+            return;
+        }
+        user.setRoles(roleService.findListByIds(tempUser.getRoles()));
         user.setName(tempUser.getName().trim());
         user.setSurname(tempUser.getSurname().trim());
         user.setAge(tempUser.getAge());
         user.setEmail(tempUser.getEmail());
-        // Смена пароля в форме редактирования не обязательна.
-        if (tempUser.getPassword() != null) {
-            user.setPassword(bCrypt.encode(tempUser.getPassword()));
-        }
         user.setGoodAcc(tempUser.getGoodAcc());
+
         dao.update(user);
-        return util.getWords().getProperty("updated");
+        util.result("updated");
     }
 
     @Override
     @Transactional
     public String deleteUser(long id) {
-        User user = findById(id);
+        User user = find(id);
         if (user == null) {
             return util.getWords().getProperty("no_id_in_db");
         }
-        user.setRoles(null);
         dao.deleteById(id);
         return util.getWords().getProperty("deleted");
     }
 
     @Override
-    public User findById(long id) {
+    public User find(long id) {
         return dao.findById(id);
     }
 
@@ -116,6 +97,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public String clearDB() {
         return dao.clearDB();
+    }
+
+    private boolean isInvalidSyntax(UnverifiedUser user, boolean isNew) {
+        if (isNew) {
+            return util.isInvalidUser(user);
+        }
+        user.setPassword("42");
+        return util.isInvalidUser(user);
     }
 
     @Autowired
