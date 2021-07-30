@@ -8,45 +8,39 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    final static String REALM = "MY_TEST_REALM";
     private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/resources").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/logout").authenticated()
-                .antMatchers("/login/check").permitAll()
-                .antMatchers("/login").anonymous()
-                .and().csrf().disable()
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/api/**").authenticated()
+                .antMatchers("/").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/img/**").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
+                .and().httpBasic().realmName(REALM).authenticationEntryPoint(getBasicEntry())
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
 
-                .formLogin().loginPage("/login")
-                .loginProcessingUrl("/login/check")
-                .usernameParameter("j_username")
-                .passwordParameter("j_password")
-                .successForwardUrl("/login/good")
-                .permitAll().and()
-
-                .logout().permitAll()
-                .logoutRequestMatcher(logoutMatcher())
-                .logoutSuccessUrl("/");
+    @Bean
+    public CustomBasicAuthenticationEntryPoint getBasicEntry() {
+        return new CustomBasicAuthenticationEntryPoint();
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
-    }
-    @Bean
-    public AntPathRequestMatcher logoutMatcher(){
-        return new AntPathRequestMatcher("/logout");
     }
 
     @Bean

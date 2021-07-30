@@ -5,6 +5,7 @@ import io.github.archmagefil.boottraining.model.UserDto;
 import io.github.archmagefil.boottraining.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.util.MultiValueMapAdapter;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ class UsersRestController {
         this.userService = userService;
     }
 
+    @Secured({"ROLE_ADMIN"})
     @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> users = userService.getDtoUserList();
@@ -43,6 +45,7 @@ class UsersRestController {
     }
 
     @PostMapping("/users")
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<UserDto> putUserInDb(@RequestBody UnverifiedUser tempUser) {
         try {
 
@@ -57,7 +60,8 @@ class UsersRestController {
         }
     }
 
-    @PatchMapping("/users")
+    @PutMapping("/users")
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<UserDto> patchUser(@RequestBody UnverifiedUser tempUser) {
         try {
 
@@ -73,6 +77,7 @@ class UsersRestController {
     }
 
     @DeleteMapping("/users/{id:[\\d]+}")
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
         if (id <= 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

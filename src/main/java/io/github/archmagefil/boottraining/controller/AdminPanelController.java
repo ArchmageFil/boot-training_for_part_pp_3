@@ -10,7 +10,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -93,22 +96,6 @@ public class AdminPanelController {
         return "redirect:/?r=true";
     }
 
-    /**
-     * @return Страница с формой авторизациии.
-     */
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login.html";
-    }
-
-    /**
-     * Вместо обработчика
-     */
-    @RequestMapping("/login/good")
-    public String goodLogin() {
-        return "redirect:/";
-    }
 
     @Autowired
     public void setMessages(VisitorMessages messages) {
