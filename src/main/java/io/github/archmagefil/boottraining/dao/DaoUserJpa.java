@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +33,8 @@ public class DaoUserJpa implements DaoUser {
 
     @Override
     public List<User> getAll() {
-        return em.createQuery("SELECT u FROM User u ORDER BY u.id",
+        return em.createQuery("SELECT u FROM User u " +
+                        "LEFT JOIN FETCH u.roles ORDER BY u.id ",
                 User.class).getResultList();
     }
 

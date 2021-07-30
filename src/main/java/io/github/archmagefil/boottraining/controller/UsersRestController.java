@@ -37,11 +37,15 @@ class UsersRestController {
         if (id <= 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        UserDto user = userService.getDtoUser(id);
-        if (user != null) {
+        try {
+            UserDto user = userService.getDtoUser(id);
             return new ResponseEntity<>(user, HttpStatus.OK);
+
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(new MultiValueMapAdapter<>(
+                    Map.of("reason", List.of(e.getMessage()))),
+                    HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/users")

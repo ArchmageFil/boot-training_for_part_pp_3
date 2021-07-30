@@ -1,5 +1,6 @@
 package io.github.archmagefil.boottraining.service;
 
+import com.sun.istack.NotNull;
 import io.github.archmagefil.boottraining.dao.DaoUser;
 import io.github.archmagefil.boottraining.model.UnverifiedUser;
 import io.github.archmagefil.boottraining.model.User;

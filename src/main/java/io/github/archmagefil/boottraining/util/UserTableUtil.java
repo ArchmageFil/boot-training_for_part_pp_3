@@ -36,14 +36,17 @@ public class UserTableUtil {
     }
 
     public static Function<User, UserDto> transformUserDto() {
-        return u -> UserDto.builder()
-                .id(u.getId())
-                .name(u.getName())
-                .surname(u.getSurname())
-                .age(u.getAge())
-                .email(u.getEmail())
-                .roles(u.getRoles())
-                .build();
+        return u -> {
+            if (u == null) throw new IllegalArgumentException("no_id_in_db");
+            return UserDto.builder()
+                    .id(u.getId())
+                    .name(u.getName())
+                    .surname(u.getSurname())
+                    .age(u.getAge())
+                    .email(u.getEmail())
+                    .roles(u.getRoles())
+                    .build();
+        };
     }
 
     public boolean isInvalidUser(UnverifiedUser user) {
