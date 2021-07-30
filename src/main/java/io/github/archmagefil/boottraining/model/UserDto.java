@@ -13,5 +13,5 @@ public class UserDto {
     String surname;
     Integer age;
     String email;
-    List<Role> roles;
+    List<RoleDto> roles;
 }

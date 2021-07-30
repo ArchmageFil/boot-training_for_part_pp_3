@@ -33,7 +33,7 @@ public class DaoUserJpa implements DaoUser {
 
     @Override
     public List<User> getAll() {
-        return em.createQuery("SELECT u FROM User u " +
+        return em.createQuery("SELECT DISTINCT u FROM User u " +
                         "LEFT JOIN FETCH u.roles ORDER BY u.id ",
                 User.class).getResultList();
     }

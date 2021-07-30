@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto getDtoUser(long id) {
         return transformUserDto().apply(findById(id));
     }

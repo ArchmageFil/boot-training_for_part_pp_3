@@ -21,8 +21,8 @@ class UsersRestController {
         this.userService = userService;
     }
 
-    @Secured({"ROLE_ADMIN"})
     @GetMapping("/users")
+    //@Secured({"ROLE_ADMIN"})
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> users = userService.getDtoUserList();
         if (users.isEmpty()) {
@@ -49,7 +49,7 @@ class UsersRestController {
     }
 
     @PostMapping("/users")
-    @Secured({"ROLE_ADMIN"})
+   // @Secured({"ROLE_ADMIN"})
     public ResponseEntity<UserDto> putUserInDb(@RequestBody UnverifiedUser tempUser) {
         try {
 
@@ -57,7 +57,6 @@ class UsersRestController {
             return new ResponseEntity<>(userService.getDtoUser(id), HttpStatus.OK);
 
         } catch (IllegalArgumentException e) {
-
             return new ResponseEntity<>(new MultiValueMapAdapter<>(
                     Map.of("reason", List.of(e.getMessage()))),
                     HttpStatus.BAD_REQUEST);
@@ -65,7 +64,7 @@ class UsersRestController {
     }
 
     @PutMapping("/users")
-    @Secured({"ROLE_ADMIN"})
+   // @Secured({"ROLE_ADMIN"})
     public ResponseEntity<UserDto> patchUser(@RequestBody UnverifiedUser tempUser) {
         try {
 
@@ -81,7 +80,7 @@ class UsersRestController {
     }
 
     @DeleteMapping("/users/{id:[\\d]+}")
-    @Secured({"ROLE_ADMIN"})
+   // @Secured({"ROLE_ADMIN"})
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
         if (id <= 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

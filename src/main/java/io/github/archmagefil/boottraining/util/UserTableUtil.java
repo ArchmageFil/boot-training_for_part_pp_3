@@ -1,9 +1,6 @@
 package io.github.archmagefil.boottraining.util;
 
-import io.github.archmagefil.boottraining.model.UnverifiedUser;
-import io.github.archmagefil.boottraining.model.User;
-import io.github.archmagefil.boottraining.model.UserDto;
-import io.github.archmagefil.boottraining.model.VisitorMessages;
+import io.github.archmagefil.boottraining.model.*;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -44,7 +41,7 @@ public class UserTableUtil {
                     .surname(u.getSurname())
                     .age(u.getAge())
                     .email(u.getEmail())
-                    .roles(u.getRoles())
+                    .roles(RoleDto.listOf(u.getRoles()))
                     .build();
         };
     }
