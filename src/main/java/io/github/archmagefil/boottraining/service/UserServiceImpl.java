@@ -3,6 +3,7 @@ package io.github.archmagefil.boottraining.service;
 import io.github.archmagefil.boottraining.dao.DaoUser;
 import io.github.archmagefil.boottraining.model.UnverifiedUser;
 import io.github.archmagefil.boottraining.model.User;
+import io.github.archmagefil.boottraining.model.UserDto;
 import io.github.archmagefil.boottraining.util.UserTableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static io.github.archmagefil.boottraining.util.UserTableUtil.transformUserDto;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,38 +30,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addUser(UnverifiedUser tempUser) {
+    public Long addUser(UnverifiedUser tempUser) {
         if (isInvalidSyntax(tempUser, true)) {
-            return;
+            return null;
         }
         if (dao.isEmailExist(tempUser.getEmail())) {
-            util.result("duplicate_email");
-            return;
+            throw new IllegalArgumentException("duplicate_email");
         }
         tempUser.setRoles(roleService.findListByIds(tempUser.getRoles()));
         tempUser.setPassword(bCrypt.encode(tempUser.getPassword()));
-        dao.add(tempUser.createUser());
-        util.result("user_added");
+        return dao.add(tempUser.createUser());
     }
 
     @Override
     @Transactional
-    public void updateUser(UnverifiedUser tempUser) {
-        User user = find(tempUser.getId());
+    public Long updateUser(UnverifiedUser tempUser) {
+        User user = findById(tempUser.getId());
         if (user == null) {
-            util.result("no_id_in_db");
-            return;
+            throw new IllegalArgumentException("no_id_in_db");
         }
         if (tempUser.getPassword() != null) {
             user.setPassword(bCrypt.encode(tempUser.getPassword()));
         }
         if (isInvalidSyntax(tempUser, false)) {
-            return;
+            throw new IllegalArgumentException("wrong_syntax");
         }
         if ((!tempUser.getEmail().equals(user.getEmail())
                 && dao.isEmailExist(tempUser.getEmail()))) {
-            util.result("duplicate_email");
-            return;
+            throw new IllegalArgumentException("duplicate_email");
         }
         user.setRoles(roleService.findListByIds(tempUser.getRoles()));
         user.setName(tempUser.getName().trim());
@@ -67,22 +67,21 @@ public class UserServiceImpl implements UserService {
         user.setGoodAcc(tempUser.getGoodAcc());
 
         dao.update(user);
-        util.result("updated");
+        return user.getId();
     }
 
     @Override
     @Transactional
-    public String deleteUser(long id) {
-        User user = find(id);
-        if (user == null) {
-            return util.getWords().getProperty("no_id_in_db");
+    public boolean deleteUser(long id) {
+        if (findById(id) == null) {
+            return false;
         }
         dao.deleteById(id);
-        return util.getWords().getProperty("deleted");
+        return true;
     }
 
     @Override
-    public User find(long id) {
+    public User findById(long id) {
         return dao.findById(id);
     }
 
@@ -91,6 +90,18 @@ public class UserServiceImpl implements UserService {
         return (dao.findByEmail(email))
                 .orElseThrow(() -> new UsernameNotFoundException(
                         email + util.getWords().getProperty("no_email_in_db")));
+    }
+
+    @Override
+    public List<UserDto> getDtoUserList() {
+        return getAllUsers().stream()
+                .map(transformUserDto())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDto getDtoUser(long id) {
+        return transformUserDto().apply(findById(id));
     }
 
     @Transactional

@@ -17,8 +17,9 @@ public class DaoUserJpa implements DaoUser {
     private EntityManager em;
 
     @Override
-    public void add(User user) {
+    public long add(User user) {
         em.persist(user);
+        return user.getId();
     }
 
     @Override

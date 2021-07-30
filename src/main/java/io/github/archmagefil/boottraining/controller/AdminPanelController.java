@@ -42,50 +42,46 @@ public class AdminPanelController {
         model.addAttribute("authenticatedUser", SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal());
         model.addAttribute("userDto", new UnverifiedUser());
-        // Если в запросе пришла инфа о наличии доп. сообщениий - добавить в модель
-        if (isRedirect) {
-            model.addAttribute("result", messages.getResult());
-        }
         model.addAttribute("AllUsersList", userService.getAllUsers());
         return "/index.html";
     }
-
-    /**
-     * Создание нового пользователя
-     *
-     * @param tempUser ДТОшка для подготовки к созданию сущности
-     * @return возвращает на основную админку.
-     */
-    @PostMapping("/")
-    @Secured({"ROLE_ADMIN"})
-    public String addUser(@ModelAttribute("UserDto") UnverifiedUser tempUser) {
-        userService.addUser(tempUser);
-        return "redirect:/?r=true";
-    }
-
-    /**
-     * Обработка формы на редактирование пользователя.
-     */
-    @PatchMapping("/")
-    @Secured({"ROLE_ADMIN"})
-    public String updateUser(@ModelAttribute UnverifiedUser tempUser) {
-        if (tempUser.getId() == null) {
-            messages.setResult("Ошибка запроса, попробуй еще раз.");
-            return "redirect:/admin/?r=true";
-        }
-        userService.updateUser(tempUser);
-        return "redirect:/?r=true";
-    }
-
-    /**
-     * Обработка запроса на удаление из БД пользователя по ИД
-     */
-    @DeleteMapping("/{id}")
-    @Secured({"ROLE_ADMIN"})
-    public String deleteUser(@PathVariable long id) {
-        messages.setResult(userService.deleteUser(id));
-        return "redirect:/?r=true";
-    }
+//
+//    /**
+//     * Создание нового пользователя
+//     *
+//     * @param tempUser ДТОшка для подготовки к созданию сущности
+//     * @return возвращает на основную админку.
+//     */
+//    @PostMapping("/")
+//    @Secured({"ROLE_ADMIN"})
+//    public String addUser(@ModelAttribute("UserDto") UnverifiedUser tempUser) {
+//        userService.addUser(tempUser);
+//        return "redirect:/?r=true";
+//    }
+//
+//    /**
+//     * Обработка формы на редактирование пользователя.
+//     */
+//    @PatchMapping("/")
+//    @Secured({"ROLE_ADMIN"})
+//    public String updateUser(@ModelAttribute UnverifiedUser tempUser) {
+//        if (tempUser.getId() == null) {
+//            messages.setResult("Ошибка запроса, попробуй еще раз.");
+//            return "redirect:/admin/?r=true";
+//        }
+//        userService.updateUser(tempUser);
+//        return "redirect:/?r=true";
+//    }
+//
+//    /**
+//     * Обработка запроса на удаление из БД пользователя по ИД
+//     */
+//    @DeleteMapping("/{id}")
+//    @Secured({"ROLE_ADMIN"})
+//    public String deleteUser(@PathVariable long id) {
+//        messages.setResult(userService.deleteUser(id));
+//        return "redirect:/?r=true";
+//    }
 
     /**
      * Очистка БД

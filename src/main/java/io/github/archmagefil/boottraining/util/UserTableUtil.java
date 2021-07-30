@@ -1,6 +1,8 @@
 package io.github.archmagefil.boottraining.util;
 
 import io.github.archmagefil.boottraining.model.UnverifiedUser;
+import io.github.archmagefil.boottraining.model.User;
+import io.github.archmagefil.boottraining.model.UserDto;
 import io.github.archmagefil.boottraining.model.VisitorMessages;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,13 +35,23 @@ public class UserTableUtil {
         }
     }
 
+    public static Function<User, UserDto> transformUserDto() {
+        return u -> UserDto.builder()
+                .id(u.getId())
+                .name(u.getName())
+                .surname(u.getSurname())
+                .age(u.getAge())
+                .email(u.getEmail())
+                .roles(u.getRoles())
+                .build();
+    }
+
     public boolean isInvalidUser(UnverifiedUser user) {
         if (isInvalidEmail(user.getEmail())) {
-            messages.setResult(words.getProperty("wrong_email"));
-            return true;
+            throw new IllegalArgumentException("wrong_email");
+
         } else if (user.getPassword() == null) {
-            messages.setResult(words.getProperty("password_empty"));
-            return true;
+            throw new IllegalArgumentException("password_empty");
         }
         return false;
     }

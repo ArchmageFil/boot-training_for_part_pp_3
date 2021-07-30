@@ -1,6 +1,6 @@
 package io.github.archmagefil.boottraining.controller;
 
-import io.github.archmagefil.boottraining.model.User;
+import io.github.archmagefil.boottraining.model.UnverifiedUser;
 import io.github.archmagefil.boottraining.model.UserDto;
 import io.github.archmagefil.boottraining.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ class UsersRestController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = userService.getDtoUserList();
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -31,37 +31,56 @@ class UsersRestController {
     }
 
     @GetMapping("/users/{id:[\\d]+}")
-    public ResponseEntity<User> getUserById(@PathVariable long id) {
-        User user = userService.findById(id);
+    public ResponseEntity<UserDto> getUserById(@PathVariable long id) {
+        if (id <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        UserDto user = userService.getDtoUser(id);
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/users")
-    public ResponseEntity<User> putUserInDb(@RequestBody UserDto tempUser) {
-        User user;
+    @PostMapping("/users")
+    public ResponseEntity<UserDto> putUserInDb(@RequestBody UnverifiedUser tempUser) {
         try {
-            user = userService.addUser(tempUser);
+
+            long id = userService.addUser(tempUser);
+            return new ResponseEntity<>(userService.getDtoUser(id), HttpStatus.OK);
+
         } catch (IllegalArgumentException e) {
+
             return new ResponseEntity<>(new MultiValueMapAdapter<>(
                     Map.of("reason", List.of(e.getMessage()))),
                     HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-//    @PatchMapping("/users/{id:[\\d]+}")
-//    public ResponseEntity<User> patchUser(@RequestBody UserDto tempUser) {
-//        User user;
-//        try {
-//            user = userService.updateUser(tempUser);
-//        } catch (IllegalArgumentException e) {
-//            return new ResponseEntity<>(new MultiValueMapAdapter<>(
-//                    Map.of("reason", List.of(e.getMessage()))),
-//                    HttpStatus.BAD_REQUEST);
-//        }
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-//    }
+    @PatchMapping("/users")
+    public ResponseEntity<UserDto> patchUser(@RequestBody UnverifiedUser tempUser) {
+        try {
+
+            long id = userService.updateUser(tempUser);
+            return new ResponseEntity<>(userService.getDtoUser(id), HttpStatus.OK);
+
+        } catch (IllegalArgumentException e) {
+
+            return new ResponseEntity<>(new MultiValueMapAdapter<>(
+                    Map.of("reason", List.of(e.getMessage()))),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/users/{id:[\\d]+}")
+    public ResponseEntity<String> deleteUser(@PathVariable long id) {
+        if (id <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (userService.deleteUser(id)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
