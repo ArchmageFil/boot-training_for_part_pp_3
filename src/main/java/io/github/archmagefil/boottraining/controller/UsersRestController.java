@@ -57,7 +57,6 @@ class UsersRestController {
             return new ResponseEntity<>(userService.getDtoUser(id), HttpStatus.OK);
 
         } catch (IllegalArgumentException e) {
-
             return new ResponseEntity<>(new MultiValueMapAdapter<>(
                     Map.of("reason", List.of(e.getMessage()))),
                     HttpStatus.BAD_REQUEST);
