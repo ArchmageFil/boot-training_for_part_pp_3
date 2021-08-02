@@ -168,7 +168,7 @@ function rolesToString(rolesArray) {
 //Возвращает строковое представление одной строки таблицы пользователей
 function printTableRow(user) {
     return `<td id="allListId_${user.id}">${user.id}</td><td>${user.name}</td><td>${user.surname}</td>
-<td>${user.age}</td><td>${user.email}</td><td>${rolesToString(user.roles)}
+<td>${user.age ?? ""}</td><td>${user.email}</td><td>${rolesToString(user.roles)}
 <td><button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
  data-bs-target="#EditorModal" onClick="editButton('allListId_${user.id}')">Редактировать</button></td>
   <td><button type="button" class="btn btn-danger" data-bs-toggle="modal"
@@ -180,7 +180,7 @@ function fillCurrentUserInfo(user) {
     let roleString = rolesToString(user.roles);
     document.getElementById('currentUserInfoTable').innerHTML = `
 <td>${user.id}</td><td>${user.name}</td><td>${user.surname}</td>
-<td>${user.age}</td><td>${user.email}</td><td>${roleString}</td>`;
+<td>${user.age ?? ""}</td><td>${user.email}</td><td>${roleString}</td>`;
     document.getElementById('headerUserEmailAndRoles').innerHTML = `
 <b>${user.email}</b> c правами: ${roleString}`;
 }
