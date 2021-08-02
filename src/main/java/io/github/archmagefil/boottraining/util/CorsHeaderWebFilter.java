@@ -14,4 +14,4 @@ public class CorsHeaderWebFilter implements WebFilter {
         exchange.getResponse().getHeaders().setAccessControlAllowOrigin("*");
         return chain.filter(exchange);
     }
-}//Access-Control-Allow-Origin
+}

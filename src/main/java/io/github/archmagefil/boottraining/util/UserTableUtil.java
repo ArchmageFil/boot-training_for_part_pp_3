@@ -68,8 +68,4 @@ public class UserTableUtil {
     public void setMessages(VisitorMessages messages) {
         this.messages = messages;
     }
-
-    public void result(String message) {
-        messages.setResult(words.getProperty(message));
-    }
 }

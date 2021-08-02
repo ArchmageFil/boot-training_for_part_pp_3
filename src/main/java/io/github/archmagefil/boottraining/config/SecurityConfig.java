@@ -24,14 +24,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                //.antMatchers("/api/**").authenticated()
                 .antMatchers("/").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/img/**").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
                 .and().httpBasic().realmName(REALM).authenticationEntryPoint(getBasicEntry())
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and().csrf().disable();
+                .and().csrf().disable();
     }
 
     @Bean

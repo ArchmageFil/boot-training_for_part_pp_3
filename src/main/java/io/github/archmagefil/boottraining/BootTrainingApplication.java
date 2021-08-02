@@ -23,7 +23,7 @@ public class BootTrainingApplication {
             } else if (os.contains("mac")) {
                 rt.exec("open " + url); // аналогично в MAC
             } else if (os.contains("nix") || os.contains("nux")) {
-                // c nix системами все несколько проблемотичнее
+                // c nix системами все несколько проблематичнее
                 String[] browsers = {"epiphany", "firefox", "mozilla", "konqueror", "netscape", "opera", "links", "lynx"};
                 // Формируем строку с вызовом всем браузеров через логическое ИЛИ в shell консоли
                 // "browser0 "URI" || browser1 "URI" ||..."
@@ -36,8 +36,9 @@ public class BootTrainingApplication {
             // игнорируем все ошибки
         }
     }
+
     @Configuration
-    public static class MyClass implements WebMvcConfigurer {
+    public static class FormatterAdder implements WebMvcConfigurer {
         @Override
         public void addFormatters(FormatterRegistry registry) {
             registry.addFormatter(new RoleFormatter());

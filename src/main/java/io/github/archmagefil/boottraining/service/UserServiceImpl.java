@@ -1,13 +1,11 @@
 package io.github.archmagefil.boottraining.service;
 
-import com.sun.istack.NotNull;
 import io.github.archmagefil.boottraining.dao.DaoUser;
 import io.github.archmagefil.boottraining.model.UnverifiedUser;
 import io.github.archmagefil.boottraining.model.User;
 import io.github.archmagefil.boottraining.model.UserDto;
 import io.github.archmagefil.boottraining.util.UserTableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -87,13 +85,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String email) {
-        return (dao.findByEmail(email))
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        email + util.getWords().getProperty("no_email_in_db")));
-    }
-
-    @Override
     public List<UserDto> getDtoUserList() {
         return getAllUsers().stream()
                 .map(transformUserDto())
@@ -104,12 +95,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto getDtoUser(long id) {
         return transformUserDto().apply(findById(id));
-    }
-
-    @Transactional
-    @Override
-    public String clearDB() {
-        return dao.clearDB();
     }
 
     private boolean isInvalidSyntax(UnverifiedUser user, boolean isNew) {

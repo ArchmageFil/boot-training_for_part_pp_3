@@ -2,6 +2,7 @@ package io.github.archmagefil.boottraining.service;
 
 import io.github.archmagefil.boottraining.dao.DaoRole;
 import io.github.archmagefil.boottraining.model.Role;
+import io.github.archmagefil.boottraining.model.RoleDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,8 @@ public class RoleServiceImpl implements RoleService {
         this.daoRole = daoRole;
     }
 
-    public List<Role> getAllRoles() {
-        return daoRole.getAll();
-    }
-
-    public Optional<Role> findByName(String role) {
-        return daoRole.findByName(role);
+    public List<RoleDto> getAllRoles() {
+        return RoleDto.listOf(daoRole.getAll());
     }
 
     public Optional<Role> findById(Long id) {

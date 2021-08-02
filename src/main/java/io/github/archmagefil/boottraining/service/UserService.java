@@ -17,10 +17,6 @@ public interface UserService {
 
     User findById(long id);
 
-    User findByUsername(String email);
-
-    String clearDB();
-
     List<UserDto> getDtoUserList();
 
     UserDto getDtoUser(long id);
