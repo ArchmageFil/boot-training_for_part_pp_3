@@ -6,6 +6,10 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+/**
+ * Нужен для нормальной разработки в условиях запущенного сервера и загруженной
+ * с диска страницы html.
+ */
 @Component
 public class CorsHeaderWebFilter implements WebFilter {
 

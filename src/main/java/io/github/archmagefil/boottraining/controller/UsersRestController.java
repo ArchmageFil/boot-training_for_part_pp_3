@@ -16,6 +16,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * РЕСТ контроллер для КРУД операций со списком пользователей
+ * <p>Пути:             запрос  разрешено      пояснение
+ * <p>/api/users -      GET     A     получить список всех пользователей
+ * <p>/api/users -      POST    A     публикация нового пользователя
+ * <p>/api/users -      PUT     A     публикация измененной информации о пользователе
+ * <p>/api/users/{id} - GET     U,A   получить пользователя по ид
+ * <p>/api/users/{id} - DELETE  A     удаление пользователя по ид
+ * <p>/api/roles -      GET     X     получение списка ролей
+ * <p>/api/userlogin -  GET     X     получение данных идентифицированного пользователя
+ * <p>
+ * где А - ROLE_ADMIN, U - ROLE_USER, X - без ограничений.
+ */
 @RestController
 @RequestMapping("/api")
 class UsersRestController {
@@ -72,7 +85,7 @@ class UsersRestController {
 
     @PutMapping("/users")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<UserDto> patchUser(@RequestBody UnverifiedUser tempUser) {
+    public ResponseEntity<UserDto> putUser(@RequestBody UnverifiedUser tempUser) {
         try {
 
             long id = userService.updateUser(tempUser);

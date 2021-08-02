@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
+/**
+ * Класс переопределяющий  настройки ответа простой авторизации
+ */
 public class CustomBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
     @Override
