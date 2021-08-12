@@ -1,6 +1,7 @@
 package io.github.archmagefil.boottraining.service;
 
 import io.github.archmagefil.boottraining.model.User;
+import io.github.archmagefil.boottraining.model.UnverifiedUser;
 import io.github.archmagefil.boottraining.model.UserDto;
 
 import java.util.List;
@@ -8,15 +9,15 @@ import java.util.List;
 public interface UserService {
     List<User> getAllUsers();
 
-    String addUser(UserDto tempUser);
+    Long addUser(UnverifiedUser tempUser);
 
-    String updateUser(User user);
+    Long updateUser(UnverifiedUser tempUser);
 
-    String deleteUser(long id);
+    boolean deleteUser(long id);
 
-    User find(long id);
+    User findById(long id);
 
-    User findByUsername(String email);
+    List<UserDto> getDtoUserList();
 
-    String clearDB();
+    UserDto getDtoUser(long id);
 }

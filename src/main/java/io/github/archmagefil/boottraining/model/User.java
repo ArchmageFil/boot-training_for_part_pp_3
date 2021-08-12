@@ -20,12 +20,13 @@ public class User implements UserDetails {
     private Long id;
     private String name;
     private String surname;
+    private Integer age;
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
     @Column(name = "isGoodAcc")
-    private Boolean GoodAcc = null;
+    private Boolean GoodAcc = true;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -33,9 +34,10 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
 
-    public User(String name, String surname, String email, String password, boolean isGoodAcc, List<Role> roles) {
+    public User(String name, String surname, Integer age, String email, String password, boolean isGoodAcc, List<Role> roles) {
         this.name = name;
         this.surname = surname;
+        this.age = age;
         this.email = email;
         this.password = password;
         this.GoodAcc = isGoodAcc;

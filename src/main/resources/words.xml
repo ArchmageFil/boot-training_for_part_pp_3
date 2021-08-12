@@ -8,7 +8,7 @@
     <entry key="no_id_in_db">Пользователя с таким ИД нет в базе данных</entry>
     <entry key="no_email_in_db"> не зарегистрирован ни на одного пользователя</entry>
     <entry key="updated">Обновлено</entry>
-    <entry key="user_added">Пользователь %s %s добавлен</entry>
+    <entry key="user_added">Пользователь добавлен</entry>
     <entry key="wrong_age">Возраст должен быть корректным или не быть вообще</entry>
     <entry key="password_empty">Пароль не может быть пустым</entry>
     <entry key="wrong_role">Пришло неверное название роли: </entry>

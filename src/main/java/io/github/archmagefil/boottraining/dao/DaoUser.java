@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface DaoUser {
 
-    void add(User user);
+    long add(User user);
 
     void update(User user);
 
@@ -16,6 +16,8 @@ public interface DaoUser {
     List<User> getAll();
 
     Optional<User> findByEmail(String email);
+
+    boolean isEmailExist(String email);
 
     User findById(long id);
 

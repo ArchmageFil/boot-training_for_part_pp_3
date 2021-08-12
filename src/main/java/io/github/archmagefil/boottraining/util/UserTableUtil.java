@@ -1,13 +1,15 @@
 package io.github.archmagefil.boottraining.util;
 
-import io.github.archmagefil.boottraining.model.UserDto;
+import io.github.archmagefil.boottraining.model.*;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,9 +20,10 @@ public class UserTableUtil {
     private final Pattern p = Pattern.compile(
             "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$");
     @Getter
-    private String message;
+    private VisitorMessages messages;
 
-    public UserTableUtil() {
+    public UserTableUtil(VisitorMessages messages) {
+        this.messages = messages;
         try {
             words.loadFromXML(Files.newInputStream(
                     new ClassPathResource("words.xml").getFile().toPath()));
@@ -29,13 +32,26 @@ public class UserTableUtil {
         }
     }
 
-    public boolean isInvalidUser(UserDto user) {
+    public static Function<User, UserDto> transformUserDto() {
+        return u -> {
+            if (u == null) throw new IllegalArgumentException("no_id_in_db");
+            return UserDto.builder()
+                    .id(u.getId())
+                    .name(u.getName())
+                    .surname(u.getSurname())
+                    .age(u.getAge())
+                    .email(u.getEmail())
+                    .roles(RoleDto.listOf(u.getRoles()))
+                    .build();
+        };
+    }
+
+    public boolean isInvalidUser(UnverifiedUser user) {
         if (isInvalidEmail(user.getEmail())) {
-            message = words.getProperty("wrong_email");
-            return true;
+            throw new IllegalArgumentException("wrong_email");
+
         } else if (user.getPassword() == null) {
-            message = words.getProperty("password_empty");
-            return true;
+            throw new IllegalArgumentException("password_empty");
         }
         return false;
     }
@@ -46,5 +62,10 @@ public class UserTableUtil {
         }
         Matcher syntax = p.matcher(email);
         return !syntax.matches();
+    }
+
+    @Autowired
+    public void setMessages(VisitorMessages messages) {
+        this.messages = messages;
     }
 }

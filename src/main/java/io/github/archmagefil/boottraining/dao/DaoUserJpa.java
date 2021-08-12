@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +16,9 @@ public class DaoUserJpa implements DaoUser {
     private EntityManager em;
 
     @Override
-    public void add(User user) {
+    public long add(User user) {
         em.persist(user);
+        return user.getId();
     }
 
     @Override
@@ -31,7 +33,8 @@ public class DaoUserJpa implements DaoUser {
 
     @Override
     public List<User> getAll() {
-        return em.createQuery("SELECT u FROM User u ORDER BY u.id",
+        return em.createQuery("SELECT DISTINCT u FROM User u " +
+                        "LEFT JOIN FETCH u.roles ORDER BY u.id ",
                 User.class).getResultList();
     }
 
@@ -52,6 +55,14 @@ public class DaoUserJpa implements DaoUser {
         } catch (javax.persistence.NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public boolean isEmailExist(String email) {
+        Query query = em.createNativeQuery(
+                "SELECT COUNT(email) FROM users WHERE email LIKE :email LIMIT 1");
+        query.setParameter("email", email);
+        return 0 != Long.parseLong(query.getSingleResult().toString());
     }
 
     @Override

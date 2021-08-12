@@ -10,8 +10,13 @@
 	</parent>
 	<groupId>io.github.archmagefil</groupId>
 	<artifactId>boottraining</artifactId>
+<<<<<<< HEAD
 	<version>0.0.3-SNAPSHOT</version>
 	<name>boottraining</name>
+=======
+	<version>0.0.1-SNAPSHOT</version>
+	<name>boot_training</name>
+>>>>>>> task_313
 	<description>Spring Boot training project</description>
 	<properties>
 		<java.version>11</java.version>
@@ -24,10 +29,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -58,8 +59,20 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.12.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.projectreactor/reactor-core -->
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId>
+			<version>3.4.8</version>
+		</dependency>
 
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
