@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.github.archmagefil</groupId>
 	<artifactId>boottraining</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>boottraining</name>
 	<description>Spring Boot training project</description>
 	<properties>
